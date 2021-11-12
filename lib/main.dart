@@ -19,10 +19,13 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State {
   final amountController = TextEditingController();
   double result = 0.0;
-
+  late double amount;
+  late int rateMultiplier;
+  int _value = 1;
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
+      //backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Rate Calculator'),
       ),
@@ -31,19 +34,67 @@ class HomePageState extends State {
           Card(
             elevation: 5,
             child: Container(
+              // color: Colors.amberAccent,
               padding: EdgeInsets.all(10),
               child: TextField(
-                decoration: InputDecoration(labelText: 'Amount'),
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                ),
                 controller: amountController,
+                style: TextStyle(),
+                onSubmitted: (String value) {
+                  amount = double.parse(value);
+                },
               ),
             ),
+          ),
+          RadioListTile(
+            value: 1,
+            groupValue: _value,
+            onChanged: (val) {
+              setState(() {
+                _value = val as int;
+              });
+            },
+            title: Text('PAYPAL'),
+          ),
+          RadioListTile(
+            value: 2,
+            groupValue: _value,
+            onChanged: (val) {
+              setState(() {
+                _value = val as int;
+              });
+            },
+            title: Text('APPLE PAY'),
+          ),
+          RadioListTile(
+            value: 3,
+            groupValue: _value,
+            onChanged: (val) {
+              setState(() {
+                _value = val as int;
+              });
+            },
+            title: Text('ZELLE'),
           ),
           RaisedButton(
               child: Text('CONVERT'),
               onPressed: () {
                 double amount = double.parse(amountController.text);
                 setState(() {
-                  result = amount * 280;
+                  switch (_value) {
+                    case 1:
+                      rateMultiplier = 280;
+                      break;
+                    case 2:
+                      rateMultiplier = 250;
+                      break;
+                    case 3:
+                      rateMultiplier = 260;
+                      break;
+                  }
+                  result = amount * rateMultiplier;
                 });
                 print(result);
               }),
